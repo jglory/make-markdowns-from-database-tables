@@ -1,0 +1,18 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./web/Dockerfile
+    volumes:
+      - "../:/var/www/html:rw"
+      - "./web/php.ini:/usr/local/etc/php/php.ini"
+    environment:
+      - "TZ=Asia/Seoul"
+    ports:
+      - "8180:80"
+    networks:
+      - table-schema-to-markdown-proxy
+networks:
+  table-schema-to-markdown-proxy:
+    driver: bridge
