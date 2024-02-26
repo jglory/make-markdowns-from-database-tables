@@ -7,12 +7,13 @@ services:
     volumes:
       - "../:/var/www/html:rw"
       - "./web/php.ini:/usr/local/etc/php/php.ini:rw"
+      - "./oracle/tnsnames.ora:/usr/lib/instantclient_21_13/network/admin/tnsnames.ora:ro"
     environment:
       - "TZ=Asia/Seoul"
     ports:
       - "8180:80"
     networks:
-      - table-schema-to-markdown-proxy
+      - make-markdowns-from-database-tables-proxy
 networks:
-  table-schema-to-markdown-proxy:
+  make-markdowns-from-database-tables-proxy:
     driver: bridge
