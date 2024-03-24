@@ -5,13 +5,11 @@ namespace App\Console\Commands;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Table;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
+use DB;
+use Schema;
+use Storage;
 use App\Console\Commands\MakeMarkdownFromDatabaseTable\Generators\Lotte as LotteGenerator;
 
-interface Generator {
-
-}
 
 class MakeMarkdownFromDatabaseTable extends Command
 {
@@ -34,6 +32,8 @@ class MakeMarkdownFromDatabaseTable extends Command
      */
     public function handle()
     {
-        $this->line((new LotteGenerator($this->argument("database"), $this->argument("schema"), $this->argument("table")))->body());
+        $generator = new LotteGenerator($this->argument("database"), $this->argument("schema"), $this->argument("table"));
+        echo ($generator->title() . PHP_EOL);
+        Storage::put($generator->title() . '.md', $generator->contents());
     }
 }
