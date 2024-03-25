@@ -10,6 +10,24 @@
         'dev' => true,
     ),
     'versions' => array(
+        'barryvdh/laravel-ide-helper' => array(
+            'pretty_version' => 'v3.0.0',
+            'version' => '3.0.0.0',
+            'reference' => 'bc1d67f01ce8c77e3f97d48ba51fa1d81874f622',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../barryvdh/laravel-ide-helper',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
+        'barryvdh/reflection-docblock' => array(
+            'pretty_version' => 'v2.1.1',
+            'version' => '2.1.1.0',
+            'reference' => 'e6811e927f0ecc37cc4deaa6627033150343e597',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../barryvdh/reflection-docblock',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'brick/math' => array(
             'pretty_version' => '0.11.0',
             'version' => '0.11.0.0',
@@ -27,6 +45,24 @@
             'install_path' => __DIR__ . '/../carbonphp/carbon-doctrine-types',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'composer/class-map-generator' => array(
+            'pretty_version' => '1.1.1',
+            'version' => '1.1.1.0',
+            'reference' => '8286a62d243312ed99b3eee20d5005c961adb311',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/./class-map-generator',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
+        'composer/pcre' => array(
+            'pretty_version' => '3.1.3',
+            'version' => '3.1.3.0',
+            'reference' => '5b16e25a5355f1f3afdfc2f954a0a80aec4826a8',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/./pcre',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
         'cordoval/hamcrest-php' => array(
             'dev_requirement' => true,
@@ -628,6 +664,24 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'phpdocumentor/reflection-common' => array(
+            'pretty_version' => '2.2.0',
+            'version' => '2.2.0.0',
+            'reference' => '1d01c49d4ed62f25aa84a747ad35d5a16924662b',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpdocumentor/reflection-common',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
+        'phpdocumentor/type-resolver' => array(
+            'pretty_version' => '1.8.2',
+            'version' => '1.8.2.0',
+            'reference' => '153ae662783729388a584b4361f2545e4d841e3c',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpdocumentor/type-resolver',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'phpoption/phpoption' => array(
             'pretty_version' => '1.9.2',
             'version' => '1.9.2.0',
@@ -636,6 +690,15 @@
             'install_path' => __DIR__ . '/../phpoption/phpoption',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'phpstan/phpdoc-parser' => array(
+            'pretty_version' => '1.27.0',
+            'version' => '1.27.0.0',
+            'reference' => '86e4d5a4b036f8f0be1464522f4c6b584c452757',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpstan/phpdoc-parser',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
         'phpunit/php-code-coverage' => array(
             'pretty_version' => '10.1.11',
@@ -802,8 +865,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0|3.0',
-                1 => '3.0.0',
+                0 => '3.0.0',
+                1 => '1.0|2.0|3.0',
             ),
         ),
         'psr/simple-cache' => array(
