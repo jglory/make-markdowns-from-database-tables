@@ -7,6 +7,7 @@ use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\Index;
 use Illuminate\Support\Facades\DB;
+use GuzzleHttp\Client as GuzzleHttpClient;
 
 class Lotte implements Generator
 {
@@ -29,23 +30,52 @@ class Lotte implements Generator
         $this->schema = $schema;
     }
 
+    private function serialNo() {
+        $options = [
+            'debug'=>false,
+            'timeout'=>30,
+            'connect_timeout'=>10,
+            'verify'=>false,
+            'headers'=>[
+                'Content-Type'=>"application/json"
+            ],
+            'body' => ""
+        ];
+
+        /** GuzzleHttpResponse $response */
+        $url = 'https://7pmcryxmx1.execute-api.ap-northeast-2.amazonaws.com/project/APP/id';
+        $response = (new GuzzleHttpClient())->request('POST', $url, $options);
+        if ($response->getStatusCode()!==200) {
+            throw new \Exception($response->getReasonPhrase(), $response->getStatusCode());
+        }
+
+        return json_decode($response->getBody())->id;
+    }
+
     public function title(): string
     {
-        $result = "{{서비스코드}}-DE-DT-" . str_pad(array_search($this->table->getName(), $this->tableNames), 6, '0', STR_PAD_LEFT);
+        static $serialNo;
+        if ($serialNo == null) {
+            $serialNo = $this->serialNo();
+        }
+        static $title;
+        if ($title == null) {
+            $title = "{{서비스코드}}-BCB-" . str_pad($serialNo, 6, '0', STR_PAD_LEFT);
+        }
 
-        return $result;
+        return $title;
     }
 
     public function table(): string
     {
         $primaryKey = $this->table->getPrimaryKey()->getColumns();
 
-        $result = "| 컬럼명 | 타입 | 길이 | 정밀도 | 스케일 | 기본값 | 널허용 | PK | 설명 |" . PHP_EOL
-            .  "| --- | --- | --- | --- | --- | --- | --- | --- | --- |" . PHP_EOL;
+        $result = "| 컬럼명 | 타입 | 길이 | 정밀도 | 스케일 | 기본값 | 널허용 | PK | 설명 |\n"
+            .  "| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n";
 
         $columns = DB::select("SELECT a.column_name, a.data_type, a.data_length, a.data_precision, a.data_scale, a.data_default, a.nullable, b.comments FROM all_tab_columns a "
             . "inner join all_col_comments b on a.owner=b.owner and a.table_name=b.table_name and a.column_name=b.column_name "
-            . "where a.table_name = 'PR_GOODS_BASE' AND a.owner = 'EC_MGR'");
+            . "where a.table_name = '" . $this->table->getName() . "' AND a.owner = '" . $this->schema . "'");
 
         foreach ($columns as $column) {
             $result .= "| " . $column->column_name
@@ -65,24 +95,24 @@ class Lotte implements Generator
 
     public function indexes(): string
     {
-        $result = "| 이름                  | 컬럼           | PK     | UNIQUE |" . PHP_EOL
-            . "| ------------------- | ------------ | ------ | ------ |" . PHP_EOL;
+        $result = "| 이름                  | 컬럼           | PK     | UNIQUE |\n"
+            . "| ------------------- | ------------ | ------ | ------ |\n";
 
         foreach ($this->table->getIndexes() as $index) {
             $result .=  "| " . $index->getName() . " "
                 . "| " . implode(",", $index->getColumns()) . " "
                 . "| " . ($index->isPrimary() ? "O" : "X") . " "
-                . "| " . ($index->isUnique() ? "O" : "X") . "|" . PHP_EOL;
+                . "| " . ($index->isUnique() ? "O" : "X") . "|\n";
         }
-        $result .= PHP_EOL;
+        $result .= "\n";
 
         return $result;
     }
 
     public function constraints(): string
     {
-        $result = "| 이름 | 컬럼 | 타입 | 조건 |" . PHP_EOL
-            . "| --- | --- | --- | --- |" . PHP_EOL;
+        $result = "| 이름 | 컬럼 | 타입 | 조건 |\n"
+            . "| --- | --- | --- | --- |\n";
 
 
         $constraints = DB::select("SELECT
@@ -117,7 +147,7 @@ ORDER BY
                     $result .= "unique";
                     break;
             }
-            $result .= " | " . $constraint->search_condition . " |" . PHP_EOL;
+            $result .= " | " . $constraint->search_condition . " |\n";
         }
 
         return $result;
@@ -136,11 +166,11 @@ ORDER BY
     public function contents(): string
     {
         return $this->metadata()
-            . "###### 테이블" . PHP_EOL . PHP_EOL
-            . $this->table() . PHP_EOL . PHP_EOL .
-            "###### 인덱스" . PHP_EOL . PHP_EOL
-            . $this->indexes() . PHP_EOL . PHP_EOL
-            . "###### 제약조건" . PHP_EOL . PHP_EOL
-            . $this->constraints() . PHP_EOL;
+            . "### 테이블\n\n"
+            . $this->table() . "\n\n"
+            . "### 인덱스\n\n"
+            . $this->indexes() . "\n\n"
+            . "### 제약조건\n\n"
+            . $this->constraints() . "\n\n";
     }
 }

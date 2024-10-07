@@ -13,7 +13,7 @@ services:
     ports:
       - "8180:80"
     networks:
-      - make-markdowns-from-database-tables-proxy
+      - it-dev-process-env-net
 networks:
-  make-markdowns-from-database-tables-proxy:
-    driver: bridge
+  it-dev-process-env-net:
+    external: true
