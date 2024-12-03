@@ -73,9 +73,12 @@ class Lotte implements Generator
         $result = "| 컬럼명 | 타입 | 길이 | 정밀도 | 스케일 | 기본값 | 널허용 | PK | 설명 |\n"
             .  "| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n";
 
-        $columns = DB::select("SELECT a.column_name, a.data_type, a.data_length, a.data_precision, a.data_scale, a.data_default, a.nullable, b.comments FROM all_tab_columns a "
+        $query = "SELECT a.column_name, a.data_type, a.data_length, a.data_precision, a.data_scale, a.data_default, a.nullable, b.comments FROM all_tab_columns a "
             . "inner join all_col_comments b on a.owner=b.owner and a.table_name=b.table_name and a.column_name=b.column_name "
-            . "where a.table_name = '" . $this->table->getName() . "' AND a.owner = '" . $this->schema . "'");
+            . "where a.table_name = '" . $this->table->getName() . "' AND a.owner = '" . $this->schema . "'"
+            . " order by a.column_id";
+
+        $columns = DB::select($query);
 
         foreach ($columns as $column) {
             $result .= "| " . $column->column_name
